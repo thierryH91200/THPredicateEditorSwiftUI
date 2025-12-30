@@ -4,16 +4,17 @@ import AppKit
 struct PredicateEditorView: NSViewRepresentable {
     @Binding var predicate: NSPredicate?
     var rowTemplates: [NSPredicateEditorRowTemplate]
-    var formattingDictionary: [String: String]? = nil
 
     func makeNSView(context: Context) -> NSPredicateEditor {
         let editor = NSPredicateEditor()
+
+        if let path = Bundle.main.path(forResource: "Predicate", ofType: "strings"),
+           let dict = NSDictionary(contentsOfFile: path) as? [String: String] {
+            editor.formattingDictionary = dict
+        }
+
         editor.rowTemplates = rowTemplates
         editor.objectValue = predicate
-
-        if let formattingDictionary {
-            editor.formattingDictionary = formattingDictionary
-        }
 
         editor.target = context.coordinator
         editor.action = #selector(Coordinator.changed(_:))
@@ -21,10 +22,6 @@ struct PredicateEditorView: NSViewRepresentable {
     }
 
     func updateNSView(_ nsView: NSPredicateEditor, context: Context) {
-        // Keep templates and formatting in sync with SwiftUI props
-        nsView.rowTemplates = rowTemplates
-        nsView.formattingDictionary = formattingDictionary
-        // Sync objectValue if it changed externally
         nsView.objectValue = predicate
     }
 

@@ -42,15 +42,13 @@ final class HybridViewModel: ObservableObject {
 
 struct HybridContentView: View {
     @StateObject private var vm = HybridViewModel()
-    @State private var formattingDictionary: [String: String] = [:]
 
     var body: some View {
         VStack(spacing: 12) {
             // NSPredicateEditor embedded in SwiftUI
             PredicateEditorView(
                 predicate: $vm.predicate,
-                rowTemplates: PredicateEditorView.defaultRowTemplates(),
-                formattingDictionary: formattingDictionary.isEmpty ? nil : formattingDictionary
+                rowTemplates: PredicateEditorView.defaultRowTemplates()
             )
             .frame(minHeight: 220)
 
@@ -71,35 +69,5 @@ struct HybridContentView: View {
             }
         }
         .padding()
-//        .task {
-//            loadFormattingStrings()
-//        }
-    }
-
-    private func loadFormattingStrings() {
-        // Reprend la logique MainWindowController: charger Predicate.strings si présent
-        if let path = Bundle.main.path(forResource: "Predicate", ofType: "strings"),
-           let dict = NSDictionary(contentsOfFile: path) as? [String: String] {
-            formattingDictionary = dict
-            return
-        }
-
-        // Fallback: try loading as UTF-16 strings file and convert via PropertyListSerialization
-        if let url = Bundle.main.url(forResource: "Predicate", withExtension: "strings"),
-           let data = try? Data(contentsOf: url),
-           let plistAny = try? PropertyListSerialization.propertyList(from: data, options: [], format: nil) {
-            if let dict = plistAny as? [String: String] {
-                formattingDictionary = dict
-            } else if let anyDict = plistAny as? [AnyHashable: Any] {
-                // Attempt to coerce to [String: String]
-                var stringDict: [String: String] = [:]
-                for (k, v) in anyDict {
-                    if let key = k as? String, let value = v as? String {
-                        stringDict[key] = value
-                    }
-                }
-                formattingDictionary = stringDict
-            }
-        }
     }
 }

@@ -1,6 +1,5 @@
 //
 //  NSPredicateEditorRowTemplate.swift
-//  KSPredicateEditorSwift
 //
 //  Created by thierryH24 on 28/11/2018.
 //  Copyright © 2018 thierryH24. All rights reserved.
