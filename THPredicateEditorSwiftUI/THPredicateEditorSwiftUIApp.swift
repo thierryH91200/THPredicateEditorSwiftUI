@@ -10,6 +10,9 @@ import SwiftData
 
 @main
 struct THPredicateEditorSwiftUIApp: App {
+    
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var delegate
+
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
@@ -25,7 +28,7 @@ struct THPredicateEditorSwiftUIApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HybridContentView()
         }
         .modelContainer(sharedModelContainer)
     }
