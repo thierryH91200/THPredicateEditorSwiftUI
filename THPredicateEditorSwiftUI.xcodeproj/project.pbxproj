@@ -6,8 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		03BA91DF2F046EDE001F0071 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 03BA91DE2F046EDE001F0071 /* README.md */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		03BA8E8F2F043D7B001F0071 /* THPredicateEditorSwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = THPredicateEditorSwiftUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		03BA91DE2F046EDE001F0071 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -32,6 +37,7 @@
 		03BA8E862F043D7B001F0071 = {
 			isa = PBXGroup;
 			children = (
+				03BA91DE2F046EDE001F0071 /* README.md */,
 				03BA8E912F043D7B001F0071 /* THPredicateEditorSwiftUI */,
 				03BA8E902F043D7B001F0071 /* Products */,
 			);
@@ -110,6 +116,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				03BA91DF2F046EDE001F0071 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -128,6 +135,8 @@
 /* Begin XCBuildConfiguration section */
 		03BA8E9A2F043D7C001F0071 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 03BA8E912F043D7B001F0071 /* THPredicateEditorSwiftUI */;
+			baseConfigurationReferenceRelativePath = BuildNumber.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -193,6 +202,8 @@
 		};
 		03BA8E9B2F043D7C001F0071 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 03BA8E912F043D7B001F0071 /* THPredicateEditorSwiftUI */;
+			baseConfigurationReferenceRelativePath = BuildNumber.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -250,17 +261,18 @@
 		};
 		03BA8E9D2F043D7C001F0071 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 03BA8E912F043D7B001F0071 /* THPredicateEditorSwiftUI */;
+			baseConfigurationReferenceRelativePath = BuildNumber.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = "$(CURRENT_PROJECT_VERSION)";
 				DEVELOPMENT_TEAM = 84WLNJ2YG4;
-				ENABLE_APP_SANDBOX = YES;
+				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -282,17 +294,18 @@
 		};
 		03BA8E9E2F043D7C001F0071 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 03BA8E912F043D7B001F0071 /* THPredicateEditorSwiftUI */;
+			baseConfigurationReferenceRelativePath = BuildNumber.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = "$(CURRENT_PROJECT_VERSION)";
 				DEVELOPMENT_TEAM = 84WLNJ2YG4;
-				ENABLE_APP_SANDBOX = YES;
+				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (

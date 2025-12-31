@@ -12,24 +12,23 @@ import SwiftData
 struct THPredicateEditorSwiftUIApp: App {
     
     @NSApplicationDelegateAdaptor(AppDelegate.self) var delegate
-
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Personne.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
+    @StateObject private var containerManager = ContainerManager()
 
     var body: some Scene {
         WindowGroup {
-            HybridContentView()
+            ContentView()
+                .environmentObject(containerManager)
         }
-        .modelContainer(sharedModelContainer)
     }
 }
+
+final class AppSchema {
+    static let shared = AppSchema()
+    
+    let schema = Schema([
+        EntityPerson.self
+    ])
+    
+    private init() {}
+}
+
