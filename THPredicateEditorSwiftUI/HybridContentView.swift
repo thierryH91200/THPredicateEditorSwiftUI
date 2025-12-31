@@ -184,6 +184,8 @@ struct HybridContentPanel: View {
                 .tabItem {
                     Label("Object", systemImage: "house")
                 }
+            
+            
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .layoutPriority(1) // Priorité élevée pour occuper tout l’espace disponible

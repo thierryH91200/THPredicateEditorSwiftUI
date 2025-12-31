@@ -32,7 +32,6 @@ final class EntityPerson {
         self.country = country
         self.isBool = isBool
         self.id = UUID()
-
     }
 
 }
@@ -56,7 +55,7 @@ final class PersonManager: PersonManaging {
     init() { }
     
     func create() throws -> EntityPerson {
-        let entity = EntityPerson()
+        var entity = EntityPerson()
 
         return entity
     }

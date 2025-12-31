@@ -26,7 +26,7 @@ final class AppSchema {
     static let shared = AppSchema()
     
     let schema = Schema([
-        EntityPerson.self
+        EntityPerson.self,
     ])
     
     private init() {}
