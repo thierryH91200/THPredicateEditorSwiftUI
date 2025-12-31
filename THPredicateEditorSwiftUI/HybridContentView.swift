@@ -23,10 +23,13 @@ final class HybridViewModel: ObservableObject {
 
     init() {
         seed()
-        seedData()
+        person = PersonManager.shared.getAllData()
+        if person.isEmpty {
+            seedData()
+        }
         // Optionally apply a default predicate similar to MainWindowController
 //        let defaultFormat = "firstName ==[cd] 'John' OR lastName ==[cd] 'doe' OR (dateOfBirth <= CAST('11/18/2018 00:00', 'NSDate') AND dateOfBirth >= CAST('01/01/2018', 'NSDate')) OR country ==[cd] 'United States' OR age = 25"
-        let defaultFormat = "firstName ==[cd] 'John'"
+        let defaultFormat = "firstName == 'John'" // OR lastName ==[cd] 'doe'"
         self.predicate = NSPredicate(format: defaultFormat)
     }
 
@@ -52,10 +55,10 @@ final class HybridViewModel: ObservableObject {
             EntityPerson(firstName: "John", lastName: "Doe", dateOfBirth: Date(), age: 29, department: "Finance", country: "United States", isBool: true),
             EntityPerson(firstName: "John", lastName: "Leo", dateOfBirth: Date(), age: 30, department: "Finance", country: "Brazil", isBool: false)
     ]
-//        for pople in person {
-////            modelContext?.insert(pople)
-//        }
-//        try PersonManager.shared.save()
+        for pople in person {
+            modelContext?.insert(pople)
+        }
+        try? PersonManager.shared.save()
 
     }
     func swiftDataPredicate(from ns: NSPredicate?) -> Predicate<EntityPerson>? {
@@ -65,7 +68,8 @@ final class HybridViewModel: ObservableObject {
 
         if format.contains("firstName ==[cd]") {
             return #Predicate<EntityPerson> { person in
-                person.firstName.localizedStandardContains("John")
+//                person.firstName.localizedStandardContains("John")
+                person.firstName == "John"
             }
         }
 
@@ -74,7 +78,6 @@ final class HybridViewModel: ObservableObject {
                 person.lastName.localizedStandardContains("Doe")
             }
         }
-
         return nil
     }
     
@@ -103,11 +106,6 @@ final class HybridViewModel: ObservableObject {
         // Evaluate NSPredicate against KVC-compliant objects (Person is NSObject)
         return (people as NSArray).filtered(using: predicate) as? [Person] ?? people
     }
-//    var filteredData: [EntityPerson] {
-//        guard let predicate else { return person }
-//        // Evaluate NSPredicate against KVC-compliant objects (Person is NSObject)
-//        return (person as NSArray).filtered(using: predicate) as? [EntityPerson] ?? person
-//    }
 }
 
 struct HybridContentView: View {
@@ -177,16 +175,15 @@ struct HybridContentData: View {
 struct HybridContentPanel: View {
     var body: some View {
         TabView {
-            HybridContentView()
-                .tabItem {
-                    Label("Object", systemImage: "house")
-                }
-            
             HybridContentData()
                 .tabItem {
                     Label("SwiftData", systemImage: "eurosign.bank.building")
                 }
-            
+
+            HybridContentView()
+                .tabItem {
+                    Label("Object", systemImage: "house")
+                }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .layoutPriority(1) // Priorité élevée pour occuper tout l’espace disponible
