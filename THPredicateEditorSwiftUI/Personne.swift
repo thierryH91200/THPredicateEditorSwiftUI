@@ -10,7 +10,7 @@ import SwiftData
 
 @Model
 final class EntityPerson {
-    @Attribute(.unique) var id: UUID
+    @Attribute(.unique) var id: UUID = UUID()
     var firstName:String = ""
     var lastName:String = ""
     var dateOfBirth = Date()
