@@ -76,7 +76,7 @@ private struct LeftPanelView: View {
                 .font(.largeTitle)
                 .fontWeight(.bold)
             
-            Text("Manage your SwiftData databases")
+            Text(String(localized:"Manage your SwiftData databases", table: "DataBaseManager"))
                 .font(.subheadline)
                 .foregroundColor(.secondary)
             
@@ -99,7 +99,7 @@ private struct LeftPanelView: View {
                 }
                 
                 // 2
-                UniformLabeledButton(String(localized: "Open existing document..."),
+                UniformLabeledButton(String(localized: "Open existing document...", table: "DataBaseManager"),
                                      systemImage: "doc.badge.ellipsis",
                                      minWidth: 300,
                                      minHeight: 30,
@@ -116,7 +116,7 @@ private struct LeftPanelView: View {
                 }
                 
                 // 3
-                UniformLabeledButton(String(localized: "Open sample document Project..."),
+                UniformLabeledButton(String(localized: "Open sample document Project...",table:"DataBaseManager"),
                                      systemImage: "wand.and.stars",
                                      minWidth: 300,
                                      minHeight: 30,
@@ -143,7 +143,7 @@ private struct LeftPanelView: View {
                                              }
                                          }
                                      } message: {
-                                         Text("This operation will delete all application preferences. Are you sure you want to proceed?")
+                                         Text(String(localized:"This operation will delete all application preferences. Are you sure you want to proceed?",table:"DataBaseManager"))
                                      }
 #endif
             }
@@ -161,7 +161,7 @@ private struct LeftPanelView: View {
             .frame(width: 50)
 
         } message: {
-            Text("The copy was successfully made.")
+            Text(String(localized:"The copy was successfully made.", table:"DataBaseManager"))
         }
 
         .frame(width: 332) // 300 utile + 2*16 padding
@@ -193,7 +193,6 @@ private struct LeftPanelView: View {
     // https://stackoverflow.com/questions/40761140/how-to-pre-load-database-in-core-data-using-swift-3-xcode-8
     func preloadDBData() {
         let folder = "DataBaseManager"
-//        let file = "SampleDataBaseManager.store"
         let documentsURL = URL.documentsDirectory
         let newDirectory = documentsURL.appendingPathComponent(folder)
         

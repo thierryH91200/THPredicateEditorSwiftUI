@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		03ED0C372F06F6CF00D0D412 /* SwiftDate in Frameworks */ = {isa = PBXBuildFile; productRef = 03ED0C362F06F6CF00D0D412 /* SwiftDate */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		03BA8E8F2F043D7B001F0071 /* THPredicateEditorSwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = THPredicateEditorSwiftUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				03ED0C372F06F6CF00D0D412 /* SwiftDate in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +70,7 @@
 			);
 			name = THPredicateEditorSwiftUI;
 			packageProductDependencies = (
+				03ED0C362F06F6CF00D0D412 /* SwiftDate */,
 			);
 			productName = THPredicateEditorSwiftUI;
 			productReference = 03BA8E8F2F043D7B001F0071 /* THPredicateEditorSwiftUI.app */;
@@ -95,6 +101,9 @@
 			);
 			mainGroup = 03BA8E862F043D7B001F0071;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				03ED0C352F06F6CF00D0D412 /* XCRemoteSwiftPackageReference "SwiftDate" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 03BA8E902F043D7B001F0071 /* Products */;
 			projectDirPath = "";
@@ -340,6 +349,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		03ED0C352F06F6CF00D0D412 /* XCRemoteSwiftPackageReference "SwiftDate" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/malcommac/SwiftDate";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		03ED0C362F06F6CF00D0D412 /* SwiftDate */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 03ED0C352F06F6CF00D0D412 /* XCRemoteSwiftPackageReference "SwiftDate" */;
+			productName = SwiftDate;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 03BA8E872F043D7B001F0071 /* Project object */;
 }

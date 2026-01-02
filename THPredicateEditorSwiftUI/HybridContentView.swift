@@ -3,12 +3,23 @@ import Combine
 import AppKit
 
 import SwiftData
+import SwiftDate
 
 // Make Person usable in SwiftUI Table rows
 extension Person: Identifiable {
     public var id: ObjectIdentifier { ObjectIdentifier(self) }
 }
 
+//
+//  Parser.swift
+//  THPredicateEditorSwiftUI
+//
+//  Created by thierryH24 on 01/01/2026.
+//
+
+import Combine
+import Foundation
+import SwiftData
 
 @MainActor
 final class HybridViewModel: ObservableObject {
@@ -45,14 +56,20 @@ final class HybridViewModel: ObservableObject {
     }
     
     func seedData() {
+        let date1 = Date() - 1.years
+        let date2 = Date() - 5.years
+        let date3 = Date() - 15.years
+        let date4 = Date() + 1.years
+        let date5 = Date() + 5.years
+        let date6 = Date() + 15.years
         person = [
-            EntityPerson(firstName: "John", lastName: "Doe", dateOfBirth: Date(), age: 24, department: "Finance", country: "Canada", isBool: true),
-            EntityPerson(firstName: "Peter", lastName: "Martin", dateOfBirth: Date(), age: 25, department: "Sales", country: "Mexico", isBool: false),
-            EntityPerson(firstName: "John", lastName: "Trump", dateOfBirth: Date(), age: 26, department: "Finance", country: "Brazil", isBool: true),
-            EntityPerson(firstName: "Mary", lastName: "Doe", dateOfBirth: Date(), age: 27, department: "Finance", country: "United States", isBool: true),
-            EntityPerson(firstName: "Leo", lastName: "Doe", dateOfBirth: Date(), age: 28, department: "Sales", country: "Mexico", isBool: false),
-            EntityPerson(firstName: "John", lastName: "Doe", dateOfBirth: Date(), age: 29, department: "Finance", country: "United States", isBool: true),
-            EntityPerson(firstName: "John", lastName: "Leo", dateOfBirth: Date(), age: 30, department: "Finance", country: "Brazil", isBool: false)
+            EntityPerson(firstName: "John", lastName: "Doe", dateOfBirth: date1, age: 24, department: "Finance", country: "Canada", isBool: true),
+            EntityPerson(firstName: "Peter", lastName: "Martin", dateOfBirth: date2, age: 25, department: "Sales", country: "Mexico", isBool: false),
+            EntityPerson(firstName: "John", lastName: "Trump", dateOfBirth: date3, age: 26, department: "Finance", country: "Brazil", isBool: true),
+            EntityPerson(firstName: "Mary", lastName: "Doe", dateOfBirth: date4, age: 27, department: "Finance", country: "United States", isBool: true),
+            EntityPerson(firstName: "Leo", lastName: "Doe", dateOfBirth: date5, age: 28, department: "Sales", country: "Mexico", isBool: false),
+            EntityPerson(firstName: "John", lastName: "Doe", dateOfBirth: date6, age: 29, department: "Finance", country: "United States", isBool: true),
+            EntityPerson(firstName: "John", lastName: "Leo", dateOfBirth: date1, age: 30, department: "Finance", country: "Brazil", isBool: false)
     ]
         for p in person {
             modelContext?.insert(p)
@@ -117,8 +134,65 @@ final class HybridViewModel: ObservableObject {
         return nil
     }
 
-    private enum ParsedValue { case string(String), int(Int), bool(Bool) }
+    private enum ParsedValue { case string(String), int(Int), bool(Bool), date(Date) }
+    
+    // Parse date from common literal formats: 'yyyy-MM-dd' or CAST('MM/dd/yyyy HH:mm', 'NSDate') / CAST('MM/dd/yyyy', 'NSDate')
+    private func parseDate(_ rhs: String) -> Date? {
+        let s = rhs.trimmingCharacters(in: .whitespacesAndNewlines)
 
+        // --- CAS 1 : CAST(Double, "NSDate")
+        if s.uppercased().hasPrefix("CAST("),
+           let comma = s.firstIndex(of: ",") {
+
+            let inside = s.dropFirst(5) // après "CAST("
+            let raw = inside[..<comma].trimmingCharacters(in: .whitespaces)
+
+            if let ti = Double(raw) {
+                // TimeInterval depuis 2001-01-01
+                return Date(timeIntervalSinceReferenceDate: ti)
+            }
+        }
+
+        // --- CAS 2 : CAST("string", "NSDate")
+        if s.uppercased().hasPrefix("CAST("),
+           let firstQuote = s.firstIndex(of: "\""),
+           let secondQuote = s[s.index(after: firstQuote)...].firstIndex(of: "\"") {
+
+            let literal = String(s[s.index(after: firstQuote)..<secondQuote])
+            return parseDateLiteral(literal)
+        }
+
+        // --- CAS 3 : string directe (fallback)
+        return parseDateLiteral(s)
+    }
+    
+    private func parseDateLiteral(_ literal: String) -> Date? {
+
+        // 1️⃣ ISO 8601 (très fréquent)
+        let iso = ISO8601DateFormatter()
+        if let d = iso.date(from: literal) {
+            return d
+        }
+
+        // 2️⃣ NSPredicate classique
+        let df = DateFormatter()
+        df.locale = Locale(identifier: "en_US_POSIX")
+
+        let formats = [
+            "yyyy-MM-dd HH:mm:ss Z",
+            "yyyy-MM-dd HH:mm:ss",
+            "yyyy-MM-dd"
+        ]
+
+        for f in formats {
+            df.dateFormat = f
+            if let d = df.date(from: literal) {
+                return d
+            }
+        }
+
+        return nil
+    }
     private func parseValue(for key: String, from rhs: String) -> ParsedValue? {
         switch key {
         case "firstName", "lastName", "country", "department":
@@ -127,6 +201,8 @@ final class HybridViewModel: ObservableObject {
             if let v = Int(rhs) { return .int(v) }
         case "isBool":
             if let v = parseBool(rhs) { return .bool(v) }
+        case "dateOfBirth":
+            if let d = parseDate(rhs) { return .date(d) }
         default:
             break
         }
@@ -174,6 +250,23 @@ final class HybridViewModel: ObservableObject {
             return nil
         }
     }
+    
+    private func predicateForDate(key: String, op: String, value: Date) -> Predicate<EntityPerson>? {
+        switch key {
+        case "dateOfBirth":
+            switch op {
+            case "==": return #Predicate { $0.dateOfBirth == value }
+            case "!=": return #Predicate { $0.dateOfBirth != value }
+            case ">":  return #Predicate { $0.dateOfBirth > value }
+            case ">=": return #Predicate { $0.dateOfBirth >= value }
+            case "<":  return #Predicate { $0.dateOfBirth < value }
+            case "<=": return #Predicate { $0.dateOfBirth <= value }
+            default: return nil
+            }
+        default:
+            return nil
+        }
+    }
 
     private func predicateForBinary(_ expr: String) -> Predicate<EntityPerson>? {
         let s = trimOuterParens(expr)
@@ -199,6 +292,7 @@ final class HybridViewModel: ObservableObject {
         case .string(let v): return predicateForString(key: lhs, op: op, value: v)
         case .int(let v):    return predicateForInt(key: lhs, op: op, value: v)
         case .bool(let v):   return predicateForBool(key: lhs, op: op, value: v)
+        case .date(let v):   return predicateForDate(key: lhs, op: op, value: v)
         }
     }
     
@@ -210,8 +304,24 @@ final class HybridViewModel: ObservableObject {
         // 1) Normalize operators with [cd] and trim
         var format = raw
             .replacingOccurrences(of: "==[cd]", with: "==")
+            .replacingOccurrences(of: "==[c]", with: "==")
+            .replacingOccurrences(of: "==[d]", with: "==")
             .replacingOccurrences(of: "!=[cd]", with: "!=")
-            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .replacingOccurrences(of: "!=[c]", with: "!=")
+            .replacingOccurrences(of: "!=[d]", with: "!=")
+            .replacingOccurrences(of: ">=[cd]", with: ">=")
+            .replacingOccurrences(of: ">=[c]", with: ">=")
+            .replacingOccurrences(of: ">=[d]", with: ">=")
+            .replacingOccurrences(of: "<=[cd]", with: "<=")
+            .replacingOccurrences(of: "<=[c]", with: "<=")
+            .replacingOccurrences(of: "<=[d]", with: "<=")
+            .replacingOccurrences(of: ">[cd]", with: ">")
+            .replacingOccurrences(of: ">[c]", with: ">")
+            .replacingOccurrences(of: ">[d]", with: ">")
+            .replacingOccurrences(of: "<[cd]", with: "<")
+            .replacingOccurrences(of: "<[c]", with: "<")
+            .replacingOccurrences(of: "<[d]", with: "<")
+            .trimmingCharacters(in: .whitespacesAndNewlines)            .trimmingCharacters(in: .whitespacesAndNewlines)
 
         format = trimOuterParens(format)
 
@@ -250,7 +360,6 @@ final class HybridViewModel: ObservableObject {
                 pendingOp = token
             }
         }
-
         return currentPredicate
     }
     
@@ -281,24 +390,42 @@ final class HybridViewModel: ObservableObject {
     }
 }
 
+
+
 struct HybridContentView: View {
     @StateObject private var vm = HybridViewModel()
 
     var body: some View {
         VStack(spacing: 12) {
             // NSPredicateEditor embedded in SwiftUI
+    
             PredicateEditorView(
                 predicate: $vm.predicate,
                 rowTemplates: PredicateEditorView.defaultRowTemplates()
             )
             .frame(minHeight: 220)
 
-            Text(vm.predicate?.predicateFormat ?? "Aucun prédicat")
+            Text(vm.predicate?.predicateFormat ?? String(localized:"No predicate"))
                 .font(.system(size: 13, weight: .regular, design: .monospaced))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(6)
                 .background(.thinMaterial)
                 .clipShape(RoundedRectangle(cornerRadius: 6))
+            
+            HStack {
+                let t = vm.swiftDataPredicate(from: vm.predicate)
+                Text(t?.description ?? "nil")
+                Text(vm.swiftDataPredicate(from: vm.predicate) != nil ? "Parsed → OK" : "Parsed → nil")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Button("Log Predicates") {
+                    print("NSPredicate:", vm.predicate?.predicateFormat ?? "nil")
+                    let parsed = vm.swiftDataPredicate(from: vm.predicate)
+                    print("SwiftData Predicate:", parsed != nil ? "OK" : "nil")
+                }
+                .buttonStyle(.bordered)
+            }
 
             Table(vm.filtered) {
                 TableColumn("First Name") { Text($0.firstName) }
@@ -325,12 +452,27 @@ struct HybridContentData: View {
             )
             .frame(minHeight: 220)
 
+            let t = vm.swiftDataPredicate(from: vm.predicate)
+            Text(String(reflecting: t))
             Text(vm.predicate?.predicateFormat ?? "Aucun prédicat")
                 .font(.system(size: 13, weight: .regular, design: .monospaced))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(6)
                 .background(.thinMaterial)
                 .clipShape(RoundedRectangle(cornerRadius: 6))
+            
+            HStack {
+                Text(vm.swiftDataPredicate(from: vm.predicate) != nil ? "Parsed → OK" : "Parsed → nil")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Button("Log Predicates") {
+                    print("NSPredicate:", vm.predicate?.predicateFormat ?? "nil")
+                    let parsed = vm.swiftDataPredicate(from: vm.predicate)
+                    print("SwiftData Predicate:", parsed != nil ? "OK" : "nil")
+                }
+                .buttonStyle(.bordered)
+            }
 
             Table(vm.filteredData) {
                 TableColumn("First Name") { Text($0.firstName) }
