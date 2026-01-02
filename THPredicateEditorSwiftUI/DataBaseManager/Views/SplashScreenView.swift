@@ -88,7 +88,7 @@ private struct LeftPanelView: View {
             // Actions principales
             VStack(spacing: 10) {
                 // 1
-                UniformLabeledButton(String(localized: "Create a new file"),
+                UniformLabeledButton(String(localized: "Create a new file",  table: "DataBaseManager"),
                                      systemImage: "plus.circle.fill",
                                      minWidth: 300,
                                      minHeight: 30,
@@ -244,7 +244,7 @@ private struct RecentProjectsListView: View {
         // Fichiers récents
         
         VStack(alignment: .leading, spacing: 10) {
-            Text(String(localized: "Recent files"))
+            Text(String(localized: "Recent files",  table: "DataBaseManger")) 
                 .font(.headline)
                 .padding(.horizontal)
             

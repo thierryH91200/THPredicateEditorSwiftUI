@@ -7,11 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		03E6EEE92F07A8E6000B1A5D /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 03E6EEE82F07A8E6000B1A5D /* README.md */; };
 		03ED0C372F06F6CF00D0D412 /* SwiftDate in Frameworks */ = {isa = PBXBuildFile; productRef = 03ED0C362F06F6CF00D0D412 /* SwiftDate */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		03BA8E8F2F043D7B001F0071 /* THPredicateEditorSwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = THPredicateEditorSwiftUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		03E6EEE82F07A8E6000B1A5D /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -37,6 +39,7 @@
 		03BA8E862F043D7B001F0071 = {
 			isa = PBXGroup;
 			children = (
+				03E6EEE82F07A8E6000B1A5D /* README.md */,
 				03BA8E912F043D7B001F0071 /* THPredicateEditorSwiftUI */,
 				03BA8E902F043D7B001F0071 /* Products */,
 			);
@@ -119,6 +122,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				03E6EEE92F07A8E6000B1A5D /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

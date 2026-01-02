@@ -92,79 +92,21 @@ struct RecentFileRow: View {
         }
         .contextMenu {
             if FileManager.default.fileExists(atPath: recentFile.url.path) {
-                Button(String(localized: "Open")) {
+                Button(String(localized: "Open", table: "DataBaseManager")) {
                     containerManager.openDatabase(at: recentFile.url)
                 }
                 
-                Button(String(localized: "Show in Finder")) {
+                Button(String(localized: "Show in Finder",  table: "DataBaseManager")) {
                     NSWorkspace.shared.activateFileViewerSelecting([recentFile.url])
                 }
                 
                 Divider()
             }
             
-            Button(String(localized: "Remove from list"), role: .destructive) {
+            Button(String(localized: "Remove from list",  table: "DataBaseManager"), role: .destructive) {
                 containerManager.removeFromRecentFiles(url: recentFile.url)
             }
         }
-    }
-}
-
-// MARK: - Sheet pour ajouter une personne
-struct AddPersonSheet: View {
-    @Binding var name: String
-    @Binding var town: String
-    @Binding var age: Int
-    @Binding var isPresented: Bool
-    let modelContext: ModelContext
-    
-    let onAdd: () -> Void
-    
-    var body: some View {
-        NavigationView {
-            Form {
-                Section(String(localized: "Informations")) {
-                    TextField(String(localized: "Name"), text: $name)
-                    TextField(String(localized: "Town"), text: $town)
-
-                    HStack {
-                        Text(String(localized: "Age"))
-                        Spacer()
-                        TextField(String(localized: "Age"), value: $age, format: .number)
-                            .textFieldStyle(.roundedBorder)
-                            .frame(width: 80)
-                    }
-                }
-            }
-            .navigationTitle(String(localized: "New person"))
-
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button(String(localized: "Cancel")) {
-                        isPresented = false
-                        resetFields()
-                    }
-                }
-                
-                ToolbarItem(placement: .confirmationAction) {
-                    Button(String(localized: "Add")) {
-//                        PersonManager.shared.create(name: name, town: town, age: age)
-
-                        isPresented = false
-                        resetFields()
-                        onAdd()
-                    }
-                    .disabled(name.isEmpty)
-                }
-            }
-        }
-        .frame(width: 400, height: 300)
-    }
-    
-    private func resetFields() {
-        name = ""
-        town = ""
-        age = 25
     }
 }
 

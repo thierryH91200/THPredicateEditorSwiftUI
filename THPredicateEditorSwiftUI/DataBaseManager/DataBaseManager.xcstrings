@@ -1,12 +1,32 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Create a new file" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Créer un nouveau fichier"
+          }
+        }
+      }
+    },
     "Manage your SwiftData databases" : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gérez vos bases de données SwiftData"
+          }
+        }
+      }
+    },
+    "Open" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OUvrir"
           }
         }
       }
@@ -29,6 +49,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ouvrir un exemple de document Projet..."
+          }
+        }
+      }
+    },
+    "Remove from list" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer de la liste"
+          }
+        }
+      }
+    },
+    "Show in Finder" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Montre dans le Finder"
           }
         }
       }
