@@ -14,7 +14,6 @@ import SwiftDate
 
 @MainActor
 final class HybridViewModel: ObservableObject {
-    @Published var people: [Person] = []
     @Published var person: [EntityPerson] = []
     @Published var predicate: NSPredicate? = nil
     
@@ -23,28 +22,16 @@ final class HybridViewModel: ObservableObject {
     }
 
     init() {
-        seed()
         person = PersonManager.shared.getAllData()
         if person.isEmpty {
             seedData()
         }
         // Optionally apply a default predicate similar to MainWindowController
 //        let defaultFormat = "firstName ==[cd] 'John' OR lastName ==[cd] 'doe' OR (dateOfBirth <= CAST('11/18/2018 00:00', 'NSDate') AND dateOfBirth >= CAST('01/01/2018', 'NSDate')) OR country ==[cd] 'United States' OR age = 25"
-        let defaultFormat = "firstName == \"John\"" // OR lastName ==[cd] 'doe'"
+        let defaultFormat = "firstName == \"John\" OR lastName ==[cd] 'doe'"
         self.predicate = NSPredicate(format: defaultFormat)
     }
 
-    func seed() {
-        people = [
-            Person(firstName: "John", lastName: "Doe", dateOfBirth: Date(), age: 24, department: "Finance", country: "Canada", isBool: true),
-            Person(firstName: "Peter", lastName: "Martin", dateOfBirth: Date(), age: 25, department: "Sales", country: "Mexico", isBool: false),
-            Person(firstName: "John", lastName: "Trump", dateOfBirth: Date(), age: 26, department: "Finance", country: "Brazil", isBool: true),
-            Person(firstName: "Mary", lastName: "Doe", dateOfBirth: Date(), age: 27, department: "Finance", country: "United States", isBool: true),
-            Person(firstName: "Leo", lastName: "Doe", dateOfBirth: Date(), age: 28, department: "Sales", country: "Mexico", isBool: false),
-            Person(firstName: "John", lastName: "Doe", dateOfBirth: Date(), age: 29, department: "Finance", country: "United States", isBool: true),
-            Person(firstName: "John", lastName: "Leo", dateOfBirth: Date(), age: 30, department: "Finance", country: "Brazil", isBool: false)
-        ]
-    }
     
     func seedData() {
         let date1 = Date() - 24.years
@@ -296,24 +283,25 @@ final class HybridViewModel: ObservableObject {
         // 1) Normalize operators with [cd] and trim
         var format = raw
             .replacingOccurrences(of: "==[cd]", with: "==")
-            .replacingOccurrences(of: "==[c]", with: "==")
-            .replacingOccurrences(of: "==[d]", with: "==")
+            .replacingOccurrences(of: "==[c]" , with: "==")
+            .replacingOccurrences(of: "==[d]" , with: "==")
             .replacingOccurrences(of: "!=[cd]", with: "!=")
-            .replacingOccurrences(of: "!=[c]", with: "!=")
-            .replacingOccurrences(of: "!=[d]", with: "!=")
+            .replacingOccurrences(of: "!=[c]" , with: "!=")
+            .replacingOccurrences(of: "!=[d]" , with: "!=")
             .replacingOccurrences(of: ">=[cd]", with: ">=")
-            .replacingOccurrences(of: ">=[c]", with: ">=")
-            .replacingOccurrences(of: ">=[d]", with: ">=")
+            .replacingOccurrences(of: ">=[c]" , with: ">=")
+            .replacingOccurrences(of: ">=[d]" , with: ">=")
             .replacingOccurrences(of: "<=[cd]", with: "<=")
-            .replacingOccurrences(of: "<=[c]", with: "<=")
-            .replacingOccurrences(of: "<=[d]", with: "<=")
-            .replacingOccurrences(of: ">[cd]", with: ">")
-            .replacingOccurrences(of: ">[c]", with: ">")
-            .replacingOccurrences(of: ">[d]", with: ">")
-            .replacingOccurrences(of: "<[cd]", with: "<")
-            .replacingOccurrences(of: "<[c]", with: "<")
-            .replacingOccurrences(of: "<[d]", with: "<")
-            .trimmingCharacters(in: .whitespacesAndNewlines)            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .replacingOccurrences(of: "<=[c]" , with: "<=")
+            .replacingOccurrences(of: "<=[d]" , with: "<=")
+            .replacingOccurrences(of: ">[cd]" , with: ">")
+            .replacingOccurrences(of: ">[c]"  , with: ">")
+            .replacingOccurrences(of: ">[d]"  , with: ">")
+            .replacingOccurrences(of: "<[cd]" , with: "<")
+            .replacingOccurrences(of: "<[c]"  , with: "<")
+            .replacingOccurrences(of: "<[d]"  , with: "<")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
 
         format = trimOuterParens(format)
 
@@ -352,11 +340,17 @@ final class HybridViewModel: ObservableObject {
                 pendingOp = token
             }
         }
+        print(currentPredicate?.debugDescription ?? "nil")
         return currentPredicate
     }
     
     func fetchFilteredData() -> [EntityPerson] {
         guard let modelContext else { return [] }
+        
+        var persons: [EntityPerson] = []
+        
+        let pred = predicate?.predicateFormat
+        print ("predicate: \(pred ?? "nil")")
 
         let descriptor = FetchDescriptor<EntityPerson>(
             predicate: swiftDataPredicate(from: predicate),
@@ -364,21 +358,16 @@ final class HybridViewModel: ObservableObject {
         )
         
         do {
-            return try modelContext.fetch(descriptor)
+            persons = try modelContext.fetch(descriptor)
         } catch {
             print("Erreur fetch :", error)
             return []
         }
+        return persons
     }
     
     var filteredData: [EntityPerson] {
         fetchFilteredData()
-    }
-
-    var filtered: [Person] {
-        guard let predicate else { return people }
-        // Evaluate NSPredicate against KVC-compliant objects (Person is NSObject)
-        return (people as NSArray).filtered(using: predicate) as? [Person] ?? people
     }
 }
 

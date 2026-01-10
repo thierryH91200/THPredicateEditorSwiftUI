@@ -18,6 +18,9 @@ final class EntityPerson {
     var department = ""
     var country = ""
     var isBool = true
+    
+//    @Relationship(deleteRule: .cascade, inverse: \EntityAdress.transaction)
+//    var sousOperations: [EntityAdress] = []
 
     init() {
         self.id = UUID()
@@ -55,11 +58,10 @@ final class PersonManager: PersonManaging {
     init() { }
     
     func create() throws -> EntityPerson {
-        var entity = EntityPerson()
+        let entity = EntityPerson()
 
         return entity
     }
-    
     
     func getAllData() -> [EntityPerson] {
         guard let modelContext else {
@@ -89,7 +91,6 @@ final class PersonManager: PersonManaging {
         modelContext.undoManager?.endUndoGrouping()
     }
 
-
     func save() throws {
         do {
             try modelContext?.save()
@@ -97,7 +98,6 @@ final class PersonManager: PersonManaging {
             throw EnumError.saveFailed
         }
     }
-
 }
 
 enum EnumError: Error {

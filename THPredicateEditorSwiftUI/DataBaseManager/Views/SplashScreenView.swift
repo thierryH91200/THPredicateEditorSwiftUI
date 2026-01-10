@@ -45,7 +45,6 @@ struct SplashScreenView: View {
             }
         }
     }
-    
 }
 
 private struct LeftPanelView: View {

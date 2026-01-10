@@ -47,11 +47,12 @@ extension NSPredicateEditorRowTemplate {
             return NSNumber(value: operators[i].rawValue)
         }
         
-        self.init( leftExpressions: leftExpressions,
-                   rightExpressionAttributeType: .stringAttributeType,
-                   modifier: .direct,
-                   operators: operatorsNSNumber,
-                   options: (Int(NSComparisonPredicate.Options.caseInsensitive.rawValue | NSComparisonPredicate.Options.diacriticInsensitive.rawValue)) )
+        self.init(
+            leftExpressions: leftExpressions,
+            rightExpressionAttributeType: .stringAttributeType,
+            modifier: .direct,
+            operators: operatorsNSNumber,
+            options: (Int(NSComparisonPredicate.Options.caseInsensitive.rawValue | NSComparisonPredicate.Options.diacriticInsensitive.rawValue)) )
     }
     
     // Int
@@ -156,6 +157,7 @@ public extension NSPredicate{
         }
         return predicateString
     }
+    
     private func getPredicateOperatorString(predicateType: NSCompoundPredicate.LogicalType) -> String{
         switch(predicateType){
         case .not: return "!"
